@@ -6,8 +6,9 @@ const routes = [
     {path: '/', component: Base},
     {path: '/pinia', component: () => import('../components/Pinia.vue')},
     {path: '/public', component: () => import('../components/Public.vue')},
-    {path: '/admin', component: () => import('../components/Admin.vue'), meta: {requiresAuth: true}
-}]
+    {path: '/admin', component: () => import('../components/Admin.vue'), meta: {requiresAuth: true}},
+    {path: '/tareas', component: () => import('../components/Tareas.vue')},
+]
 
 const router = createRouter({
     history: createMemoryHistory(), routes,

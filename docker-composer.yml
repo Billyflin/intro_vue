@@ -1,0 +1,18 @@
+version: '3.8'  # Versión de Docker Compose
+
+services:
+  db:
+    image: mysql:8.0  # Imagen de MySQL (puedes cambiar la versión si lo deseas)
+    restart: always  # Reiniciar automáticamente el contenedor si se detiene
+    environment:
+      MYSQL_ROOT_PASSWORD: tu_root_password  # Contraseña para el usuario root (¡reemplázala!)
+      MYSQL_DATABASE: tu_base_de_datos  # Nombre de la base de datos (opcional)
+      MYSQL_USER: tu_usuario  # Usuario adicional (opcional)
+      MYSQL_PASSWORD: tu_password  # Contraseña del usuario adicional (opcional)
+    ports:
+      - "3306:3306"  # Mapear el puerto 3306 del contenedor al 3306 del host
+    volumes:
+      - mysql_data:/var/lib/mysql  # Montar un volumen para persistir los datos
+
+volumes:
+  mysql_data:  # Definición del volumen
