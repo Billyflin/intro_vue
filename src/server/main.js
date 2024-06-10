@@ -1,27 +1,23 @@
 import express from 'express';
 import cors from 'cors';
+import sequelize from './config/database.js';
 import Tarea from './models/tarea.js';
-import {Sequelize} from "sequelize";
-import config from './config/config.json' assert {type: 'json'};
 
-const sequelize = new Sequelize(config.development.database, config.development.username, config.development.password, {
-    host: config.development.host,
-    dialect: config.development.dialect // <-- Explicitly set dialect here
-});
+
 
 const app = express();
 
 (async () => {
     try {
-        await sequelize.authenticate(); // Prueba la conexión
-        console.log('Conexión a la base de datos establecida correctamente.');
-
-        await Tarea.sync(); // Crea la tabla si no existe
-        console.log('La tabla Tarea ha sido sincronizada.');
+        await sequelize.authenticate();
+        console.log('Connection established successfully.');
+        await Tarea.sync();
+        console.log('The table "Tarea" has been synchronized successfully.');
     } catch (error) {
-        console.error('Error al conectar a la base de datos o sincronizar la tabla:', error);
+        console.error('Error:', error);
     }
 })();
+
 
 
 app.use(cors('http://localhost:5173'));
@@ -55,17 +51,23 @@ app.post("/tareas/:id", async (req, res) => {
     try {
         const { id } = req.params;
         const { completada } = req.body;
+        const { nombre } = req.body;
 
         console.log('id:', id);
         console.log('completada:', completada);
+        console.log('nombre:', nombre);
+        console.log('req:', req.body);
 
         const tarea = await Tarea.findByPk(id); // Buscar la tarea por su ID
 
         if (!tarea) {
             return res.status(404).json({ error: 'Tarea no encontrada' });
         }
-
         tarea.completada = completada;
+
+        if (nombre) {
+            tarea.nombre = nombre;
+        }
         await tarea.save(); // Guardar los cambios en la base de datos
 
         res.json(tarea); // Enviar la tarea actualizada como respuesta
